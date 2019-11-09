@@ -29,27 +29,17 @@ add a client `bash add-client.sh <new-client>`
 setup iptables rules, see: https://www.ckn.io/blog/2017/11/14/wireguard-vpn-typical-setup/ step 6 for more details.
 
     Track VPN Connection
-
-
     iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
     iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
-
     VPN Traffic
-
-
     iptables -A INPUT -p udp -m udp --dport 51820 -m conntrack --ctstate NEW -j ACCEPT
 
-
     Forwarding/NAT
-
     iptables -A FORWARD -i wg0 -o wg0 -m conntrack --ctstate NEW -j ACCEPT
     iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
 
-
     Make iptables persist:
-
-
     apt-get install iptables-persistent
     systemctl enable netfilter-persistent
     netfilter-persistent save
